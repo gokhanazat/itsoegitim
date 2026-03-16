@@ -27,11 +27,9 @@ export async function middleware(req: NextRequest) {
   }
 
   if (session) {
-    // If logged in and trying to access auth pages, redirect to dashboard or home
+    // If logged in and trying to access auth pages, redirect to landing page
     if (isPublicPath && path !== "/") {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single()
-      if (profile?.role === 'admin') return NextResponse.redirect(new URL("/dashboard", req.url))
-      return NextResponse.redirect(new URL("/home", req.url))
+      return NextResponse.redirect(new URL("/", req.url))
     }
 
     // Guard admin paths

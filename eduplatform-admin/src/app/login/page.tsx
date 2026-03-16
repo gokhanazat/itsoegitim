@@ -44,9 +44,8 @@ export default function LoginPage() {
       setError("Giriş başarısız: " + error.message);
       setLoading(false);
     } else if (session) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single()
-      if (profile?.role === 'admin') router.push("/dashboard")
-      else router.push("/home")
+      router.push("/")
+      router.refresh()
     }
   };
 
