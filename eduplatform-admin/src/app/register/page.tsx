@@ -76,7 +76,7 @@ export default function RegisterPage() {
       {/* Left Side - Image (Desktop Only) - Reuse login image or similar style */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group">
         <img 
-          src="/login_side_image_1773666388093.png" 
+          src="/login-bg.png" 
           alt="Register background" 
           className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 transition-transform duration-1000 group-hover:scale-110"
         />

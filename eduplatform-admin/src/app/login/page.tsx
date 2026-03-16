@@ -54,7 +54,7 @@ export default function LoginPage() {
       {/* Left Side - Image (Desktop Only) */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group">
         <img 
-          src="/login_side_image_1773666388093.png" 
+          src="/login-bg.png" 
           alt="Login background" 
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
         />

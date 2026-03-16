@@ -111,31 +111,10 @@ export default async function LandingPage() {
         {/* Android Style Hero Banner */}
         <section className="relative w-full h-[400px] rounded-[3rem] overflow-hidden group shadow-2xl shadow-indigo-100">
           <img 
-            src="/landing_hero_banner_1773665519997.png" 
+            src="/hero.png" 
             alt="Landing Hero" 
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/80 via-indigo-600/40 to-transparent"></div>
-          
-          <div className="absolute inset-0 flex flex-col justify-center px-16 max-w-2xl space-y-8">
-            <Badge className="w-fit bg-sky-400 text-white border-none py-1.5 px-4 rounded-full font-bold uppercase tracking-widest text-[10px]">
-                Öğrenmeye Hemen Başla
-            </Badge>
-            <h1 className="text-6xl font-black text-white leading-tight tracking-tight">
-              Geleceği <br /> Uzmanlardan <br /> <span className="text-sky-300 underline decoration-sky-300/30">Keşfedin</span>
-            </h1>
-            <p className="text-indigo-50 text-xl font-medium opacity-90 leading-relaxed">
-              Milyonlarca öğrenciye katılın. Programlama, tasarım ve daha fazlasında uzmanlaşın.
-            </p>
-            <div className="flex items-center gap-4 pt-4">
-              <Button className="h-16 px-10 rounded-2xl bg-white text-indigo-600 font-black text-lg hover:bg-sky-50 shadow-2xl transition-all hover:scale-105" asChild>
-                <Link href={session ? "/home" : "/register"}>{session ? "Eğitimlere Git" : "Şimdi Katıl"}</Link>
-              </Button>
-              <Button variant="outline" className="h-16 px-10 rounded-2xl border-white/20 bg-white/10 backdrop-blur-xl text-white font-bold hover:bg-white/20" asChild>
-                <Link href="/home">Kataloğu İncele</Link>
-              </Button>
-            </div>
-          </div>
         </section>
 
         {/* Top Categories */}
