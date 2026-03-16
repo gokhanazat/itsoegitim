@@ -33,7 +33,7 @@ export async function middleware(req: NextRequest) {
     }
 
     // Guard admin paths
-    if (path.startsWith("/dashboard") || path.startsWith("/manage-courses") || path.startsWith("/whitelist")) {
+    if (path.startsWith("/dashboard") || path.startsWith("/manage-courses") || path.startsWith("/whitelist") || path.startsWith("/manage-certificates")) {
        const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single()
        if (profile?.role !== 'admin') return NextResponse.redirect(new URL("/home", req.url))
     }
