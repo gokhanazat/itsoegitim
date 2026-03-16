@@ -38,41 +38,13 @@ export default async function StudentHomePage({
 
   return (
     <div className="space-y-10 pb-20">
-      {/* Hero Section / Welcome */}
-      <div className="relative overflow-hidden rounded-[2.5rem] bg-indigo-600 p-8 md:p-12 text-white shadow-2xl shadow-indigo-200">
-        <div className="relative z-10 max-w-2xl">
-            <Badge className="bg-white/20 hover:bg-white/30 text-white border-none py-1.5 px-4 rounded-full mb-6 backdrop-blur-md">
-                Yeni Eğitimler Yayında! 🚀
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-               Geleceğinizi <span className="text-sky-300">Tasarlayın</span>,<br /> Bilginizi Geliştirin.
-            </h1>
-            <p className="text-indigo-100 text-lg md:text-xl font-medium mb-8">
-                ITSO Akademi ile profesyonel eğitimler alın, sertifikanızı kazanın ve kariyerinizde bir adım öne geçin.
-            </p>
-            <div className="flex flex-wrap gap-4">
-                <div className="flex -space-x-3">
-                    {[1,2,3,4].map(i => (
-                        <div key={i} className="w-10 h-10 rounded-full border-2 border-indigo-600 bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold overflow-hidden shadow-md">
-                             <img src={`https://i.pravatar.cc/40?img=${i+10}`} alt="user" className="w-full h-full object-cover" />
-                        </div>
-                    ))}
-                    <div className="w-10 h-10 rounded-full border-2 border-indigo-600 bg-sky-400 flex items-center justify-center text-white text-[10px] font-bold shadow-md">
-                        +500
-                    </div>
-                </div>
-                <div className="text-sm font-medium flex flex-col justify-center">
-                    <span className="text-white">Aktif Öğrenci</span>
-                    <span className="text-sky-200">Siz de aramıza katılın</span>
-                </div>
-            </div>
-        </div>
-        
-        {/* Abstract Shapes */}
-        <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block overflow-hidden">
-            <div className="absolute top-1/4 right-[-10%] w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-[-20%] right-[10%] w-[300px] h-[300px] bg-sky-500/30 rounded-full blur-3xl shadow-emerald-200"></div>
-        </div>
+      {/* Hero Section / Banner Image */}
+      <div className="relative h-[300px] w-full overflow-hidden rounded-[2.5rem] shadow-2xl shadow-indigo-100 group">
+        <img 
+            src="/ogrenci-banner.jpeg" 
+            alt="Student Banner" 
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        />
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
