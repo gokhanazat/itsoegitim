@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
-import { Trash2, Plus, GripVertical, FileText, Video as VideoIcon, ArrowLeft, Save, Layout, ListOrdered } from "lucide-react"
+import { Trash2, Plus, GripVertical, FileText, Video as VideoIcon, ArrowLeft, Save, Layout, ListOrdered, BookOpen } from "lucide-react"
 import Link from "next/link"
 
 export default function CourseEditPage() {
@@ -141,14 +141,20 @@ export default function CourseEditPage() {
                     <div className="grid grid-cols-2 gap-6">
                          <div className="grid gap-3">
                             <Label className="font-bold text-slate-500 ml-1">Kategori</Label>
-                            <Select value={course.category} onValueChange={v => setCourse({...course, category: v})}>
-                                <SelectTrigger className="h-12 rounded-xl bg-slate-50/50 border-slate-100"><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                {["Programlama", "Tasarım", "İş Geliştirme", "Liderlik", "Diğer"].map(c => (
-                                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="relative">
+                                <Input 
+                                    list="category-list"
+                                    value={course.category} 
+                                    onChange={e => setCourse({...course, category: e.target.value})} 
+                                    placeholder="Kategori seçin veya yazın..." 
+                                    className="h-12 rounded-xl bg-slate-50/50 border-slate-100 focus:bg-white" 
+                                />
+                                <datalist id="category-list">
+                                    {["Yazılım", "Tasarım", "Kişisel Gelişim", "Yabancı Dil", "Sınav Hazırlık"].map(c => (
+                                        <option key={c} value={c} />
+                                    ))}
+                                </datalist>
+                            </div>
                         </div>
                         <div className="grid gap-3">
                             <Label className="font-bold text-slate-500 ml-1">Şehir Kısıtlaması</Label>
@@ -236,6 +242,25 @@ export default function CourseEditPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            {!isNew && (
+                <Card className="border-none shadow-sm rounded-[2.5rem] bg-amber-500 text-white overflow-hidden p-8 h-fit">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                            <BookOpen size={24} />
+                        </div>
+                        <h3 className="font-bold text-lg leading-tight text-white">Sınav & Sorular</h3>
+                    </div>
+                    <p className="text-amber-50 text-sm leading-relaxed mb-6 opacity-90">
+                        Bu eğitim için hazırlanan sınav sorularını yönetin, yeni sorular ekleyin veya mevcut olanları düzenleyin.
+                    </p>
+                    <Button asChild className="w-full h-12 rounded-xl bg-white text-amber-600 hover:bg-amber-50 font-bold shadow-lg shadow-amber-900/20 gap-2 border-none">
+                        <Link href={`/manage-courses/${id}/quiz`}>
+                            <ListOrdered size={18} /> Sınavı Yönet
+                        </Link>
+                    </Button>
+                </Card>
+            )}
 
             <Card className="border-none shadow-sm rounded-[2.5rem] bg-gradient-to-br from-indigo-500 to-primary text-white overflow-hidden p-8 h-fit">
                 <h3 className="font-bold text-lg mb-2">Profesyonel İpucu</h3>

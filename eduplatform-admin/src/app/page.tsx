@@ -49,14 +49,24 @@ export default async function LandingPage() {
     .limit(5)
     .order("created_at", { ascending: false })
 
-  const categories = [
-    { name: "Programlama", icon: Code, color: "text-blue-500", bg: "bg-blue-50" },
-    { name: "Tasarım", icon: Palette, color: "text-purple-500", bg: "bg-purple-50" },
-    { name: "İş Dünyası", icon: Briefcase, color: "text-emerald-500", bg: "bg-emerald-50" },
-    { name: "Pazarlama", icon: Megaphone, color: "text-orange-500", bg: "bg-orange-50" },
-    { name: "Müzik", icon: Music, color: "text-red-500", bg: "bg-red-50" },
-    { name: "Fotoğrafçılık", icon: Camera, color: "text-teal-500", bg: "bg-teal-50" },
-  ]
+  const { data: catData } = await supabase.from("courses").select("category").eq("is_published", true)
+  const uniqueCats = Array.from(new Set(catData?.map(c => c.category) || []))
+  
+  const iconMap: any = {
+    "Programlama": { icon: Code, color: "text-blue-500", bg: "bg-blue-50" },
+    "Tasarım": { icon: Palette, color: "text-purple-500", bg: "bg-purple-50" },
+    "İş Dünyası": { icon: Briefcase, color: "text-emerald-500", bg: "bg-emerald-50" },
+    "Pazarlama": { icon: Megaphone, color: "text-orange-500", bg: "bg-orange-50" },
+    "Müzik": { icon: Music, color: "text-red-500", bg: "bg-red-50" },
+    "Fotoğrafçılık": { icon: Camera, color: "text-teal-500", bg: "bg-teal-50" },
+    "Yazılım": { icon: Code, color: "text-blue-500", bg: "bg-blue-50" },
+    "Kişisel Gelişim": { icon: Star, color: "text-amber-500", bg: "bg-amber-50" },
+  }
+
+  const categories = uniqueCats.map(cat => ({
+    name: cat,
+    ...(iconMap[cat] || { icon: BookOpen, color: "text-indigo-500", bg: "bg-indigo-50" })
+  }))
 
   return (
     <div className="flex flex-col min-h-screen bg-white">

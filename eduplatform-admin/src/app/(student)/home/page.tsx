@@ -34,7 +34,9 @@ export default async function StudentHomePage({
 
   const { data: courses } = await supabaseQuery.order("created_at", { ascending: false })
 
-  const categories = ["Hepsi", "Programlama", "Tasarım", "İş Geliştirme", "Liderlik", "Diğer"]
+  const { data: rawCourses } = await supabase.from("courses").select("category").eq("is_published", true)
+  const uniqueCategories = Array.from(new Set(rawCourses?.map(c => c.category) || []))
+  const categories = ["Hepsi", ...uniqueCategories]
 
   return (
     <div className="space-y-10 pb-20">
