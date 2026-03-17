@@ -96,7 +96,7 @@ export default async function LandingPage() {
             )}
 
             <Link 
-                href={!session ? "/login" : (isAdmin ? "/dashboard" : "/profile")} 
+                href={!session ? "/login" : "/profile"} 
                 className="flex items-center gap-3 p-1 pr-4 bg-slate-50 rounded-full border border-slate-100 hover:bg-slate-100 transition-colors group"
             >
                 <div className="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center text-primary font-bold overflow-hidden border border-slate-100 relative">
@@ -107,7 +107,7 @@ export default async function LandingPage() {
                     )}
                 </div>
                 <span className="text-xs font-bold text-slate-700 max-w-[100px] truncate">
-                    {!session ? "Giriş Yap" : (userProfile?.full_name || "Hesabım")}
+                    {!session ? "Giriş Yap" : (userProfile?.full_name || "Profilim")}
                 </span>
             </Link>
           </div>
