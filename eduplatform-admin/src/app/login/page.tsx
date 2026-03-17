@@ -35,13 +35,36 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     
-    const { data: { session }, error } = await supabase.auth.signInWithPassword({
+    const { data: { session }, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    if (error) {
-      setError("Giriş başarısız: " + error.message);
+    if (authError) {
+      if (authError.message === "Invalid login credentials") {
+        // Check if user is in whitelist but not yet registered
+        const { data: whitelistUser } = await supabase
+          .from("whitelist")
+          .select("is_active")
+          .ilike("email", email)
+          .single();
+
+        const { data: profileUser } = await supabase
+          .from("profiles")
+          .select("id")
+          .ilike("email", email)
+          .single();
+
+        if (whitelistUser && !profileUser) {
+          setError("E-postanız beyaz listede kayıtlı ancak henüz hesap oluşturmamışsınız. Lütfen 'Create an account' linkine tıklayarak kayıt olun.");
+        } else if (whitelistUser && profileUser && !whitelistUser.is_active) {
+            setError("Hesabınız yönetici tarafından pasif hale getirilmiş.");
+        } else {
+          setError("Giriş başarısız: E-posta veya şifre hatalı.");
+        }
+      } else {
+        setError("Giriş başarısız: " + authError.message);
+      }
       setLoading(false);
     } else if (session) {
       router.push("/")

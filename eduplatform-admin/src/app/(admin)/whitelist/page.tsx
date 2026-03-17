@@ -7,14 +7,29 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Search, Plus, FileUp, Trash2, Power, PowerOff, UserCheck, MapPin, Mail, Hash } from "lucide-react"
+import { Search, Plus, FileUp, Trash2, Power, PowerOff, UserCheck, MapPin, Mail, Hash, CheckCircle2 } from "lucide-react"
 
-type WhitelistEntry = { id: string; email: string; sicil_no: string; city: string; is_active: boolean; added_at: string; notes: string }
+import { adminChangeUserPassword } from "@/app/actions/admin-actions"
+import { KeyRound, ShieldAlert } from "lucide-react"
+
+type WhitelistEntry = { 
+  id: string; 
+  email: string; 
+  sicil_no: string; 
+  city: string; 
+  is_active: boolean; 
+  added_at: string; 
+  notes: string;
+  profile_id?: string; // Optinal profile id
+}
 
 export default function WhitelistPage() {
   const [entries, setEntries] = useState<WhitelistEntry[]>([])
   const [search, setSearch] = useState("")
   const [showAdd, setShowAdd] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<WhitelistEntry | null>(null)
+  const [newPassword, setNewPassword] = useState("")
   const [newEmail, setNewEmail] = useState("")
   const [newSicil, setNewSicil] = useState("")
   const [newCity, setNewCity] = useState("")
@@ -24,11 +39,41 @@ export default function WhitelistPage() {
   async function load() {
     let q = supabase.from("whitelist").select("*").order("added_at", { ascending: false })
     if (search) q = q.or(`email.ilike.%${search}%,sicil_no.ilike.%${search}%`)
-    const { data } = await q
-    setEntries(data ?? [])
+    const { data: whitelistData } = await q
+    
+    // Check which ones have profiles
+    if (whitelistData) {
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, email")
+      
+      const mapped = whitelistData.map(w => ({
+        ...w,
+        profile_id: profiles?.find(p => p.email.toLowerCase() === w.email?.toLowerCase())?.id
+      }))
+      setEntries(mapped)
+    } else {
+      setEntries([])
+    }
   }
 
   useEffect(() => { load() }, [search])
+
+  async function handlePasswordChange() {
+    if (!selectedUser?.profile_id || !newPassword) return
+    setLoading(true)
+    
+    const result = await adminChangeUserPassword(selectedUser.profile_id, newPassword)
+    
+    if (result.success) {
+      alert("Şifre başarıyla güncellendi.")
+      setShowPasswordModal(false)
+      setNewPassword("")
+    } else {
+      alert("Hata: " + result.error)
+    }
+    setLoading(false)
+  }
 
   async function addEntry() {
     if (!newEmail && !newSicil) return
@@ -95,7 +140,7 @@ export default function WhitelistPage() {
               />
            </div>
            <div className="flex items-center text-xs text-slate-400 font-medium italic">
-                * CSV formatı: email, sicil_no, city, notes
+                * Mavi ikonlu kullanıcılar kayıtlıdır. Şifrelerini değiştirebilirsiniz.
            </div>
         </div>
         
@@ -106,7 +151,7 @@ export default function WhitelistPage() {
                 <th className="text-left px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Kullanıcı Bilgileri</th>
                 <th className="text-left px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Bölge/Şehir</th>
                 <th className="text-left px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Durum</th>
-                <th className="text-left px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Eklenme</th>
+                <th className="text-left px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Kayıt Durumu</th>
                 <th className="text-right px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">İşlemler</th>
               </tr>
             </thead>
@@ -135,11 +180,23 @@ export default function WhitelistPage() {
                       {e.is_active ? "Aktif" : "Pasif"}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500 font-medium">
-                    {new Date(e.added_at).toLocaleDateString("tr-TR", { day: 'numeric', month: 'short', year: 'numeric' })}
+                  <td className="px-6 py-4 text-sm">
+                    {e.profile_id ? (
+                      <Badge className="bg-blue-50 text-blue-600 border-none font-bold px-3 py-1 gap-1">
+                        <CheckCircle2 size={12} /> Kayıtlı
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-slate-300 font-medium">Bekliyor</Badge>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {e.profile_id && (
+                        <Button size="icon" variant="ghost" className="rounded-xl text-blue-500 hover:bg-blue-50"
+                          onClick={() => { setSelectedUser(e); setShowPasswordModal(true); }} title="Şifre Değiştir">
+                          <KeyRound size={18} />
+                        </Button>
+                      )}
                       <Button size="icon" variant="ghost" className={`rounded-xl ${e.is_active ? 'text-amber-500 hover:bg-amber-50' : 'text-emerald-500 hover:bg-emerald-50'}`}
                         onClick={() => toggleActive(e.id, e.is_active)} title={e.is_active ? "Pasif Yap" : "Aktif Yap"}>
                         {e.is_active ? <PowerOff size={18} /> : <Power size={18} />}
@@ -165,6 +222,45 @@ export default function WhitelistPage() {
         </div>
       </Card>
 
+      {/* Şifre Değiştirme Modalı */}
+      <Dialog open={showPasswordModal} onOpenChange={setShowPasswordModal}>
+        <DialogContent className="rounded-3xl border-none shadow-2xl p-0 max-w-md">
+          <div className="bg-blue-600 h-2"></div>
+          <DialogHeader className="p-6 pb-0 text-center">
+            <div className="mx-auto w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                <KeyRound size={24} />
+            </div>
+            <DialogTitle className="text-2xl font-bold">Şifre Güncelle</DialogTitle>
+            <p className="text-sm text-slate-400">
+                <span className="font-bold text-slate-600">{selectedUser?.email}</span> kullanıcısı için yeni bir şifre tanımlayın.
+            </p>
+          </DialogHeader>
+          <div className="p-6 space-y-4">
+            <div className="space-y-2">
+                <Label>Yeni Şifre</Label>
+                <Input 
+                    type="password"
+                    placeholder="En az 6 karakter" 
+                    className="h-11 rounded-xl bg-slate-50 border-slate-200" 
+                    value={newPassword} 
+                    onChange={e => setNewPassword(e.target.value)} 
+                />
+            </div>
+            <div className="flex gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100 text-amber-700 text-[11px] leading-snug">
+                <ShieldAlert size={20} className="shrink-0" />
+                <span>Bu işlem kullanıcının mevcut şifresini hemen geçersiz kılacaktır. Lütfen yeni şifreyi kullanıcıya bildirmeyi unutmayın.</span>
+            </div>
+            <div className="flex gap-3">
+                <Button variant="ghost" className="flex-1 rounded-xl border border-slate-200 font-bold" onClick={() => setShowPasswordModal(false)}>İptal</Button>
+                <Button className="flex-[2] rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold" onClick={handlePasswordChange} disabled={loading || newPassword.length < 6}>
+                {loading ? "Güncelleniyor..." : "Şifreyi Güncelle"}
+                </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Yeni Kayıt Modalı */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent className="rounded-3xl border-none shadow-2xl overflow-hidden p-0 max-w-md">
           <div className="premium-gradient h-2 px-0"></div>
