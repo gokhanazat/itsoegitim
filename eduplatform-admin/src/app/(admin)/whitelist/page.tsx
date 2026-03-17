@@ -190,7 +190,7 @@ export default function WhitelistPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2 transition-opacity">
                       {e.profile_id && (
                         <Button size="icon" variant="ghost" className="rounded-xl text-blue-500 hover:bg-blue-50"
                           onClick={() => { setSelectedUser(e); setShowPasswordModal(true); }} title="Şifre Değiştir">
