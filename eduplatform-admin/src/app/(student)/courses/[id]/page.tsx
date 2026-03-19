@@ -13,7 +13,8 @@ import {
     Monitor,
     FileText,
     ChevronRight,
-    Star
+    Star,
+    PlayCircle
 } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -142,12 +143,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 <div className="premium-gradient h-2"></div>
                 <CardContent className="p-8 space-y-8">
                     <div className="space-y-4">
-                        <EnrollButton 
-                            courseId={course.id} 
-                            userId={session?.user.id} 
-                            isEnrolled={!!enrollment}
-                            isFree={true} 
-                        />
+                        <Link href={`/courses/${id}/watch`} className="block w-full">
+                            <Button className="w-full h-14 rounded-2xl bg-primary hover:bg-indigo-600 text-white font-black text-lg shadow-xl shadow-indigo-100/50 flex items-center justify-center gap-3 group transition-all">
+                                <PlayCircle size={24} className="group-hover:scale-110 transition-transform" />
+                                Eğitime Başla
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="space-y-4">
