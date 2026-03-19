@@ -190,6 +190,10 @@ export default function CourseEditPage() {
                         <Label className="font-bold text-slate-500 ml-1">Eğitim Açıklaması</Label>
                         <Textarea rows={4} value={course.description} onChange={e => setCourse({...course, description: e.target.value})} placeholder="Eğitim hakkında detaylı bilgi verin..." className="rounded-xl bg-slate-50/50 border-slate-100 focus:bg-white resize-none" />
                     </div>
+                    <div className="grid gap-3">
+                        <Label className="font-bold text-slate-500 ml-1">Kapak Görseli (Thumbnail URL)</Label>
+                        <Input value={course.thumbnail_url} onChange={e => setCourse({...course, thumbnail_url: e.target.value})} placeholder="https://example.com/image.jpg" className="h-12 rounded-xl bg-slate-50/50 border-slate-100 focus:bg-white" />
+                    </div>
                     <div className="grid grid-cols-2 gap-6">
                          <div className="grid gap-3">
                             <Label className="font-bold text-slate-500 ml-1">Kategori</Label>

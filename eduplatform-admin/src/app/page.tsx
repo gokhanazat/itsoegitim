@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { createServerSupabase } from "@/lib/supabase/server"
+import { supabaseAdmin } from "@/lib/supabase/admin"
 
 export const dynamic = "force-dynamic"
 
@@ -41,15 +42,15 @@ export default async function LandingPage() {
     isAdmin = profile?.role === 'admin'
   }
   
-  // Real course fetching
-  const { data: realCourses } = await supabase
+  // Real course fetching with bypass for visibility
+  const { data: realCourses } = await supabaseAdmin
     .from("courses")
     .select("*")
     .eq("is_published", true)
     .limit(5)
     .order("created_at", { ascending: false })
 
-  const { data: catData } = await supabase.from("courses").select("category").eq("is_published", true)
+  const { data: catData } = await supabaseAdmin.from("courses").select("category").eq("is_published", true)
   const uniqueCats = Array.from(new Set(catData?.map(c => c.category) || []))
   
   const iconMap: any = {
