@@ -72,9 +72,14 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
                 <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight">
                     {course.title}
                 </h1>
-                <p className="text-slate-500 text-lg leading-relaxed">
-                    Bu eğitim, alanında uzman eğitmenimiz tarafından hazırlanmış olup, size temelden ileri seviyeye kadar tüm gerekli yetkinlikleri kazandırmayı amaçlar.
-                </p>
+                <div className="bg-slate-50/50 border border-slate-100 p-8 rounded-[2.5rem] space-y-4 shadow-sm hover:shadow-indigo-50/50 transition-all">
+                    <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <Star size={18} className="text-primary" /> Eğitim Hakkında
+                    </h3>
+                    <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                        {course.description || "Bu eğitim için henüz bir açıklama eklenmemiş."}
+                    </p>
+                </div>
             </div>
 
             {/* Video Placeholder or Intro */}

@@ -37,7 +37,11 @@ fun CourseDetailScreen(courseId: String, navController: NavHostController) {
     val userId = authState.currentUser?.id ?: ""
 
     LaunchedEffect(courseId, userId) {
+        if (courseState.courses.isEmpty()) {
+            courseVM.onIntent(CourseIntent.Load)
+        }
         if (userId.isNotEmpty()) {
+            courseVM.onIntent(CourseIntent.LoadUserEntries(userId))
             lessonVM.onIntent(LessonIntent.Load(userId, courseId))
         }
     }
@@ -117,16 +121,56 @@ fun CourseDetailScreen(courseId: String, navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = "Eğitim Hakkında",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = course?.description ?: "",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Eğitim Hakkında",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = course?.description ?: "Bu eğitim için henüz bir açıklama girilmemiş.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Button(
+                            onClick = { /* Scroll to lessons or already here */ },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
+                        ) {
+                            Icon(Icons.Default.List, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Dersler")
+                        }
+
+                        if (isEnrolled && course?.hasCertificate == true) {
+                            Button(
+                                onClick = { navController.navigate(Screen.Quiz.go(courseId)) },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Icon(Icons.Default.Quiz, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Sınav")
+                            }
+                        }
+                    }
                 }
             }
 
@@ -135,7 +179,7 @@ fun CourseDetailScreen(courseId: String, navController: NavHostController) {
                     text = "Eğitim İçeriği",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
                 )
             }
 

@@ -223,16 +223,14 @@ fun CategoryChip(title: String, icon: ImageVector, isSelected: Boolean) {
 
 @Composable
 fun CourseGridItem(course: com.eduplatform.domain.model.Course, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
+    Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFC)),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFC))
-        ) {
+        Column {
             AsyncImage(
                 model = course.thumbnailUrl,
                 contentDescription = null,
@@ -241,35 +239,35 @@ fun CourseGridItem(course: com.eduplatform.domain.model.Course, onClick: () -> U
                     .height(100.dp),
                 contentScale = ContentScale.Crop
             )
-        }
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        Text(
-            course.title, 
-            fontWeight = FontWeight.Bold, 
-            fontSize = 13.sp, 
-            maxLines = 1,
-            color = Color(0xFF1E293B)
-        )
-        
-        Spacer(modifier = Modifier.height(4.dp))
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Star, null, tint = Color(0xFFFFB300), modifier = Modifier.size(12.dp))
-                Text(" 4.8", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF64748B))
+            
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    course.title, 
+                    fontWeight = FontWeight.Bold, 
+                    fontSize = 13.sp, 
+                    maxLines = 1,
+                    color = Color(0xFF1E293B)
+                )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Star, null, tint = Color(0xFFFFB300), modifier = Modifier.size(12.dp))
+                        Text(" 4.8", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF64748B))
+                    }
+                    Text(
+                        "Ücretsiz", 
+                        color = Color(0xFF10B981), 
+                        fontWeight = FontWeight.Bold, 
+                        fontSize = 12.sp
+                    )
+                }
             }
-            Text(
-                "Ücretsiz", 
-                color = Color(0xFF10B981), 
-                fontWeight = FontWeight.Bold, 
-                fontSize = 12.sp
-            )
         }
     }
 }

@@ -24,7 +24,11 @@ fun WebCourseDetailScreen(courseId: String, onNav: (String) -> Unit) {
     val isEnrolled = courseId in courseState.enrolledCourseIds
 
     LaunchedEffect(courseId, userId) {
+        if (courseState.courses.isEmpty()) {
+            courseVM.onIntent(CourseIntent.Load)
+        }
         if (userId.isNotEmpty()) {
+            courseVM.onIntent(CourseIntent.LoadUserEntries(userId))
             lessonVM.onIntent(LessonIntent.Load(userId, courseId))
         }
     }
@@ -63,9 +67,19 @@ fun WebCourseDetailScreen(courseId: String, onNav: (String) -> Unit) {
                     Span({ style { color(Color("#64748B")) } }) { Text("${course?.durationMinutes} dakika") }
                 }
 
-                H3({ style { marginBottom(12.px) } }) { Text("Eğitim Hakkında") }
-                P({ style { property("line-height", "1.6"); color(Color("#475569")); marginBottom(32.px) } }) {
-                    Text(course?.description ?: "")
+                Div({
+                    style {
+                        backgroundColor(Color("#F8FAFC"))
+                        padding(24.px)
+                        borderRadius(16.px)
+                        marginBottom(32.px)
+                        property("border", "1px solid #E2E8F0")
+                    }
+                }) {
+                    H3({ style { marginBottom(12.px); color(Color("#4F46E5")); fontWeight(700) } }) { Text("Eğitim Hakkında") }
+                    P({ style { property("line-height", "1.6"); color(Color("#475569")); margin(0.px) } }) {
+                        Text(course?.description ?: "Bu eğitim için henüz bir açıklama girilmemiş.")
+                    }
                 }
 
                 H3({ style { marginBottom(16.px) } }) { Text("Eğitim İçeriği") }

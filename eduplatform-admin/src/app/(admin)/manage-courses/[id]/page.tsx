@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
-import { Trash2, Plus, GripVertical, FileText, Video as VideoIcon, ArrowLeft, Save, Layout, ListOrdered, BookOpen } from "lucide-react"
+import { Trash2, Plus, GripVertical, FileText, Video as VideoIcon, ArrowLeft, Save, Layout, ListOrdered, BookOpen, Star } from "lucide-react"
 import Link from "next/link"
 import { adminSaveCourse, adminGetCourse, adminGetLessons, adminSaveLesson } from "@/app/actions/admin-actions"
 import { ThumbnailUpload } from "./ThumbnailUpload"
@@ -182,9 +182,19 @@ export default function CourseEditPage() {
                         <Label className="font-bold text-slate-500 ml-1">Eğitim Başlığı</Label>
                         <Input value={course.title} onChange={e => setCourse({...course, title: e.target.value})} placeholder="Örn: Sıfırdan İleri Seviye Kotlin" className="h-12 rounded-xl bg-slate-50/50 border-slate-100 focus:bg-white" />
                     </div>
-                    <div className="grid gap-3">
-                        <Label className="font-bold text-slate-500 ml-1">Eğitim Açıklaması</Label>
-                        <Textarea rows={4} value={course.description} onChange={e => setCourse({...course, description: e.target.value})} placeholder="Eğitim hakkında detaylı bilgi verin..." className="rounded-xl bg-slate-50/50 border-slate-100 focus:bg-white resize-none" />
+                    <div className="p-6 rounded-[2rem] bg-indigo-50/50 border border-indigo-100 space-y-4">
+                        <div className="flex items-center gap-2">
+                            <Star className="text-primary" size={18} />
+                            <Label className="font-extrabold text-slate-700">Eğitim Hakkında (Görünüm Önizleme)</Label>
+                        </div>
+                        <Textarea 
+                            rows={5} 
+                            value={course.description} 
+                            onChange={e => setCourse({...course, description: e.target.value})} 
+                            placeholder="Eğitim hakkında detaylı bilgi verin..." 
+                            className="rounded-2xl bg-white border-slate-100 focus:bg-white resize-none shadow-sm p-4 text-slate-600 leading-relaxed" 
+                        />
+                        <p className="text-[10px] text-slate-400 italic">Eğitim sayfasında bu alan "şık bir kart" olarak görüntülenecektir.</p>
                     </div>
                     <div className="grid gap-3">
                         <Label className="font-bold text-slate-500 ml-1">Eğitim Kapak Görseli</Label>

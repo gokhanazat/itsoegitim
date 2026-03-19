@@ -94,9 +94,11 @@ export default async function MyCoursesPage() {
 
               <CardContent className="p-8 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                        {course.title}
-                    </h3>
+                    <Link href={`/courses/${course.id}/watch`}>
+                        <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-primary transition-colors line-clamp-2 cursor-pointer">
+                            {course.title}
+                        </h3>
+                    </Link>
                     <button className="text-slate-300 hover:text-slate-600 transition-colors">
                         <MoreVertical size={20} />
                     </button>
