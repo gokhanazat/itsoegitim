@@ -33,28 +33,28 @@ export function ThumbnailUpload({ currentUrl, onUpload }: ThumbnailUploadProps) 
 
         setUploading(true)
         try {
-            // 2. Generate path (e.g., courses/thumbnail-123.jpg)
+            // 2. Generate path (e.g., thumbnail-123.jpg)
             const fileExt = file.name.split('.').pop()
             const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
-            const filePath = `thumbnails/${fileName}`
+            const filePath = `${fileName}`
 
-            // 3. Upload to Supabase Storage (Assumes 'courses' bucket exists)
+            // 3. Upload to Supabase Storage (Using existing 'thumbnails' bucket)
             const { error: uploadError } = await supabase.storage
-                .from('courses')
+                .from('thumbnails')
                 .upload(filePath, file)
 
             if (uploadError) throw new Error(uploadError.message)
 
             // 4. Get Public URL
             const { data: { publicUrl } } = supabase.storage
-                .from('courses')
+                .from('thumbnails')
                 .getPublicUrl(filePath)
 
             onUpload(publicUrl)
             toast({ title: "Başarılı", description: "Görsel yüklendi." })
         } catch (error: any) {
             console.error("Upload error:", error)
-            toast({ title: "Yükleme Hatası", description: "Görsel yüklenemedi. Supabase panelinden 'courses' bucket'ının oluşturulduğundan ve PUBLIC olduğundan emin olun.", variant: "destructive" })
+            toast({ title: "Yükleme Hatası", description: "Görsel yüklenemedi. Supabase panelinden 'thumbnails' bucket'ının PUBLIC olduğundan emin olun.", variant: "destructive" })
         } finally {
             setUploading(false)
         }
