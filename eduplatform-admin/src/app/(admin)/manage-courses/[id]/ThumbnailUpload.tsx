@@ -53,8 +53,13 @@ export function ThumbnailUpload({ currentUrl, onUpload }: ThumbnailUploadProps) 
             onUpload(publicUrl)
             toast({ title: "Başarılı", description: "Görsel yüklendi." })
         } catch (error: any) {
-            console.error("Upload error:", error)
-            toast({ title: "Yükleme Hatası", description: "Görsel yüklenemedi. Supabase panelinden 'thumbnails' bucket'ının PUBLIC olduğundan emin olun.", variant: "destructive" })
+            console.error("Full upload error:", error)
+            const errorMessage = error.message || "Bilinmeyen bir hata"
+            toast({ 
+                title: "Yükleme Hatası", 
+                description: `Hata: ${errorMessage}. Supabase panelinden 'thumbnails' bucket'ının RLS politikalarını ve PUBLIC olduğunu kontrol edin.`, 
+                variant: "destructive" 
+            })
         } finally {
             setUploading(false)
         }
