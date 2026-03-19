@@ -100,12 +100,18 @@ export default async function AdminCoursesPage() {
                   <TableCell className="text-right px-8">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-100 text-slate-400 hover:text-primary" asChild>
-                        <Link href={`/manage-courses/${course.id}`}><Edit size={16} /></Link>
+                        <Link href={`/manage-courses/${course.id || course.course_id}`}><Edit size={16} /></Link>
                       </Button>
                       <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-100 text-slate-400 hover:text-amber-500" asChild>
-                        <Link href={`/manage-courses/${course.id}/quiz`}><BookOpen size={16} /></Link>
+                        <Link href={`/manage-courses/${course.id || course.course_id}/quiz`}><BookOpen size={16} /></Link>
                       </Button>
-                      <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-100 text-red-300 hover:text-red-500 hover:bg-red-50">
+                      <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl border-slate-100 text-red-300 hover:text-red-500 hover:bg-red-50" onClick={async () => {
+                        if (confirm("Bu kursu silmek istediğinizden emin misiniz?")) {
+                            const supabase = await createServerSupabase()
+                            await supabase.from("courses").delete().eq("id", course.id || course.course_id)
+                            window.location.reload()
+                        }
+                      }}>
                         <Trash2 size={16} />
                       </Button>
                     </div>

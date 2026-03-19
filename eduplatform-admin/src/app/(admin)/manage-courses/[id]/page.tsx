@@ -17,11 +17,25 @@ import Link from "next/link"
 
 export default function CourseEditPage() {
   const params = useParams()
-  const idStr = Array.isArray(params.id) ? params.id[0] : params.id
-  const id = idStr === "new" ? "new" : (idStr || "undefined")
-  const isNew = id === "new"
   const router = useRouter()
+  
+  // Robust ID detection from multiple sources
+  const idStr = Array.isArray(params.id) ? params.id[0] : params.id
+  const urlPath = typeof window !== 'undefined' ? window.location.pathname : ''
+  const idFromPath = urlPath.split('/').pop()
+  
+  const id = idStr || (idFromPath === 'new' ? 'new' : idFromPath) || "undefined"
+  const isNew = id === "new"
+  
   const { toast } = useToast()
+
+  // Safety Redirect
+  useEffect(() => {
+    if (id === "undefined" || id === "null") {
+        console.error("Geçersiz ID tespit edildi, listeye yönlendiriliyor.")
+        router.push("/manage-courses")
+    }
+  }, [id, router])
 
   const [loading, setLoading] = useState(false)
   const [course, setCourse] = useState({
