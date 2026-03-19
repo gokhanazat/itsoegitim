@@ -16,7 +16,9 @@ import { Trash2, Plus, GripVertical, FileText, Video as VideoIcon, ArrowLeft, Sa
 import Link from "next/link"
 
 export default function CourseEditPage() {
-  const { id } = useParams()
+  const params = useParams()
+  const idStr = Array.isArray(params.id) ? params.id[0] : params.id
+  const id = idStr === "new" ? "new" : (idStr || "undefined")
   const isNew = id === "new"
   const router = useRouter()
   const { toast } = useToast()
@@ -90,8 +92,8 @@ export default function CourseEditPage() {
       if (isNew) {
         res = await supabase.from("courses").insert(payload).select().single()
       } else {
-        if (!id || id === "undefined") {
-            throw new Error("Geçerli bir kurs ID'si bulunamadı.")
+        if (!id || id === "undefined" || id === "null") {
+            throw new Error(`Geçerli bir kurs ID'si bulunamadı (Görülen ID: ${id}). Lütfen sayfayı yenileyip tekrar deneyin.`)
         }
         res = await supabase.from("courses").update(payload).eq("id", id).select().single()
       }

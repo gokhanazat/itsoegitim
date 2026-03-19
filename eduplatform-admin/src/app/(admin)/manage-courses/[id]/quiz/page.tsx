@@ -17,7 +17,8 @@ import { Badge } from "@/components/ui/badge"
 import { Trash2, Plus, ArrowUp, ArrowDown, ChevronRight } from "lucide-react"
 
 export default function QuizBuilderPage() {
-  const { id: courseId } = useParams()
+  const params = useParams()
+  const courseId = Array.isArray(params.id) ? params.id[0] : params.id
   const { toast } = useToast()
 
   const [quiz, setQuiz] = useState<any>(null)
