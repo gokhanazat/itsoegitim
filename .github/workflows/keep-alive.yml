@@ -1,9 +1,9 @@
-name: Supabase Keep Alive
+name: Supabase Keep Alive (eduplatform)
 
 on:
   schedule:
-    # Her Pazartesi ve Perşembe sabah saat 09:00'da (TSİ) çalışır
-    - cron: '0 6 * * 1,4'
+    # Her gün sabah 09:00'da (TSİ) otomatik çalışır
+    - cron: '0 6 * * *'
   workflow_dispatch: # Manuel çalıştırma butonu
 
 jobs:
